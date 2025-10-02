@@ -6,17 +6,29 @@
   <body style="margin: 0; overflow: hidden;">
     <a-scene embedded arjs>
       
-      <!-- 動画素材を読み込む -->
+      <!-- 動画アセット -->
       <a-assets>
-        <video id="myVideo" src="sample.mp4" autoplay loop muted playsinline webkit-playsinline></video>
+        <video id="myVideo" 
+               src="sample.mp4" 
+               autoplay 
+               loop 
+               muted 
+               playsinline 
+               webkit-playsinline>
+        </video>
       </a-assets>
 
-      <!-- マーカー上に動画を表示 -->
+      <!-- マーカーに水平配置 -->
       <a-marker preset="hiro">
-        <a-video src="#myVideo" width="2" height="1" position="0 0 0"></a-video>
+        <a-video 
+          src="#myVideo" 
+          width="2" height="1" 
+          position="0 0 0" 
+          rotation="-90 0 0"
+          autoplay loop muted playsinline webkit-playsinline>
+        </a-video>
       </a-marker>
 
-      <!-- カメラ -->
       <a-entity camera></a-entity>
     </a-scene>
   </body>
