@@ -4,32 +4,32 @@
     <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/2.2.1/aframe/build/aframe-ar.js"></script>
   </head>
   <body style="margin: 0; overflow: hidden;">
+
     <a-scene embedded arjs>
-      
+
       <!-- 動画アセット -->
       <a-assets>
-        <video id="myVideo" 
-               src="sample.mp4" 
-               autoplay 
-               loop 
-               muted 
-               playsinline 
-               webkit-playsinline>
-        </video>
+        <video id="myVideo" src="sample.mp4" loop playsinline webkit-playsinline></video>
       </a-assets>
 
       <!-- マーカーに水平配置 -->
       <a-marker preset="hiro">
-        <a-video 
-          src="#myVideo" 
-          width="2" height="1" 
-          position="0 0 0" 
-          rotation="-90 0 0"
-          autoplay loop muted playsinline webkit-playsinline>
-        </a-video>
+        <a-video id="videoPlane" src="#myVideo" width="2" height="1" position="0 0 0" rotation="-90 0 0"></a-video>
       </a-marker>
 
       <a-entity camera></a-entity>
     </a-scene>
+
+    <!-- タップで再生 -->
+    <script>
+      // ページ全体をタップで動画再生
+      document.body.addEventListener('click', () => {
+        const video = document.querySelector('#myVideo');
+        if (video.paused) {
+          video.play();
+        }
+      }, { once: true }); // 1回だけ実行
+    </script>
+
   </body>
 </html>
