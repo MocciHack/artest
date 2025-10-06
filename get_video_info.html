@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>YouTube API Test</title>
+</head>
+<body>
+  <h1>YouTube Video Info</h1>
+  <pre id="output">Loading...</pre>
+
+  <script>
+    const API_KEY = "AIzaSyDkCDMgkVE7cAJQE0WrBuk0ewxwumjoK9Y";   // ←取得したAPIキーを入れる
+    const VIDEO_ID = "yrRgjNRygsA"; // ←調べたい動画のID
+
+    async function fetchVideoInfo() {
+      const url = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${VIDEO_ID}&key=${API_KEY}`;
+
+      try {
+        const res = await fetch(url);
+        const json = await res.json();
+
+        if (!json.items || json.items.length === 0) {
+          document.getElementById("output").textContent = "Video not found.";
+          return;
+        }
+
+        const item = json.items[0];
+        const snippet = item.snippet;
+        const statistics = item.statistics;
+        const content = item.contentDetails;
+
+        // ISO8601 duration → 秒換算
+        function parseDuration(isoDuration) {
+          const match = isoDuration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+          let hours = (match[1] ? parseInt(match[1]) : 0);
+          let minutes = (match[2] ? parseInt(match[2]) : 0);
+          let seconds = (match[3] ? parseInt(match[3]) : 0);
+          return hours * 3600 + minutes * 60 + seconds;
+        }
+
+        const data = {
+          title: snippet.title,
+          channel_id: snippet.channelId,
+          channel_title: snippet.channelTitle,
+          published_at: snippet.publishedAt,
+          views: statistics.viewCount ? parseInt(statistics.viewCount) : null,
+          likes: statistics.likeCount ? parseInt(statistics.likeCount) : null, // 公開されていれば取得可
+          comments: statistics.commentCount ? parseInt(statistics.commentCount) : null,
+          duration_sec: parseDuration(content.duration)
+        };
+
+        document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById("output").textContent = "Error: " + err;
+      }
+    }
+
+    fetchVideoInfo();
+  </script>
+</body>
+</html>
